@@ -1,0 +1,18 @@
+https://github.com/amitsaha/python-grpc-demo/blob/master/demo1/Dockerfile.web_app
+
+
+FROM python:3.9-buster as build
+RUN apt-get -y update && apt-get -y install python3 python3-pip
+RUN pip install grpcio-tools==1.38.0 python-json-logger==2.0.1 Flask==2.0.0
+
+ADD protos /protos
+WORKDIR /protos
+RUN ./build.sh
+
+WORKDIR /
+COPY /webapp /app
+RUN cp -r /protos/gen-py /app
+WORKDIR /app
+CMD ["./run-server.sh"]
+
+
